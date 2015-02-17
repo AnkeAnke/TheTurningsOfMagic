@@ -1,16 +1,14 @@
-﻿using UnityEngine;
-using System.Collections;
-
+﻿
 namespace BlockFaces
 {
     class Solid : MonoBehaviour, BlockFace
     {
-        public bool OnEnter(Player player)
+        public override bool OnEnter(Player player)
         {
             return true;
         }
 
-        public void OnReached(Player player)
+        public override void OnReached(Player player)
         {
         }
     }
