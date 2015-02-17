@@ -50,15 +50,15 @@ public struct Direction
         return d.index;
     }
 
-    static private Direction GetDirection(Vector3 vectorDir)
+    static public Direction GetDirection(Vector3 vectorDir)
     {
         int maxDim = 0;
         if (Mathf.Abs(vectorDir[0]) < Mathf.Abs(vectorDir[1]))
             maxDim = Mathf.Abs(vectorDir[1]) < Mathf.Abs(vectorDir[2]) ? 2 : 1;
         else
-            maxDim = Mathf.Abs(vectorDir[2]) < Mathf.Abs(vectorDir[0]) ? 2 : 0;
+            maxDim = Mathf.Abs(vectorDir[2]) < Mathf.Abs(vectorDir[0]) ? 0 : 2;
 
-        return DIRS[maxDim * 2 + Mathf.Sign(vectorDir[maxDim]) < 0 ? 0 : 1];
+        return DIRS[maxDim * 2 + (vectorDir[maxDim] < 0 ? 1 : 0)];
     }
 
     private Direction(int index)

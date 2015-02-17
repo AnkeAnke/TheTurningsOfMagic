@@ -1,7 +1,7 @@
 ﻿
 namespace BlockFaces
 {
-    class Solid : MonoBehaviour, BlockFace
+    class Solid : BlockFace
     {
         public override bool OnEnter(Player player)
         {
