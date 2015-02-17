@@ -1,15 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Player : MonoBehaviour
+class Player : MonoBehaviour
 {
+    public PlayerState State;
+
+    public Player()
+    {
+        State = new Magician();
+    }
+
     void Start()
     {
-
+        State.Start();
     }
 
     void Update()
     {
-
+        State.Update();
     }
 }
