@@ -15,7 +15,19 @@ abstract class PlayerState
     /// Reference to the holding players transformation.
     /// </summary>
     protected Transform PlayerTransform;
-    public abstract void Start(Transform playerTransform);
+
+    /// <summary>
+    /// Main camera script.
+    /// </summary>
+    protected GameCamera MainCamera;
+
+    public virtual void Start(Transform playerTransform, GameCamera mainCamera)
+    {
+        Position = new Int3(playerTransform.position);
+        this.PlayerTransform = playerTransform;
+        this.MainCamera = mainCamera;
+    }
+
     public abstract void Update();
 
     //public virtual Vector3 GetPosition()
@@ -26,18 +38,16 @@ abstract class PlayerState
 
 class Magician : PlayerState
 {
-    protected Int3 up;
+    //protected Int3 up;
     protected bool moveable = true;
     protected Vector3 startPosition, startRight, startUp;
-    public override void Start(Transform playerTransform)
+
+    public override void Start(Transform playerTransform, GameCamera mainCamera)
     {
-        Position = new Int3(playerTransform.position);
-        this.PlayerTransform = playerTransform;
+        base.Start(playerTransform, mainCamera);
 
         // Save initial player position.
         startPosition = (Vector3)Position;
-        Debug.Log("Position: " + Position);
-        Debug.Log("StartPosition: " + startPosition);
         startRight = playerTransform.right;
         startUp = playerTransform.up;
     }
@@ -69,6 +79,7 @@ class Magician : PlayerState
             }
         }
 
+        // Fallback moving via keyboard.
         Int3 nextPos;
         if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
@@ -90,16 +101,16 @@ class Magician : PlayerState
             Debug.Log("Player position: " + Position);
         }
         
-        // TODO: Move
-        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        // Move (touch)
+        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended && !MainCamera.CameraFollowingLastTouch)
         {
             if (Input.GetTouch(0).position.x > Screen.width / 2)
             {
-                nextPos = Position + Int3.UnitX;
+                nextPos = Position + new Int3(Vector3.Cross(PlayerTransform.up, MainCamera.DiscreteToPlayer.Vector));
             }
             else
             {
-                nextPos = Position - Int3.UnitX;
+                nextPos = Position - new Int3(Vector3.Cross(PlayerTransform.up, MainCamera.DiscreteToPlayer.Vector));
             }
             
             if(!World.Get().IsSolid(nextPos))

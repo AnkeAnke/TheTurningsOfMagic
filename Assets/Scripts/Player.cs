@@ -3,7 +3,7 @@ using System.Collections;
 
 class Player : MonoBehaviour
 {
-    public Camera TheCameraIAmResponsibleFor;
+    public GameCamera MainCamera;
 
     public PlayerState State;
 
@@ -14,7 +14,7 @@ class Player : MonoBehaviour
 
     void Start()
     {
-        State.Start(transform);
+        State.Start(transform, MainCamera);
     }
 
     void Update()

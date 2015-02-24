@@ -23,8 +23,12 @@ class GameCamera : MonoBehaviour
     private Vector2 lastTouchPosition = -Vector2.one;
 
 
-    public bool CameraFollowingTouch { get { return cameraFollowingTouch; }}
-    bool cameraFollowingTouch = false;
+    /// <summary>
+    /// True if the camera followed the camera since the last touch begin event.
+    /// </summary>
+    public bool CameraFollowingLastTouch { get { return cameraFollowingLastTouch; } }
+    bool cameraFollowingCurrentTouch = false;
+    bool cameraFollowingLastTouch = false;
 
     /// <summary>
     /// Scale factor to account for screen size and pixel scaling.
@@ -54,20 +58,22 @@ class GameCamera : MonoBehaviour
             if (Input.GetTouch(0).phase == TouchPhase.Began)
             {
                 lastTouchPosition = Input.touches[0].position;
+                cameraFollowingLastTouch = false;
             }
             else if (Input.GetTouch(0).phase == TouchPhase.Ended)
             {
                 lastTouchPosition = -Vector2.one;
-                cameraFollowingTouch = false;
+                cameraFollowingCurrentTouch = false;
             }
-            else if (Input.GetTouch(0).phase == TouchPhase.Moved && !cameraFollowingTouch)
+            else if (Input.GetTouch(0).phase == TouchPhase.Moved && !cameraFollowingCurrentTouch)
             {
-                cameraFollowingTouch = Vector2.Distance(lastTouchPosition, Input.GetTouch(0).position) / screenScale > TAP_MOVE_DEADZONE;
+                cameraFollowingCurrentTouch = Vector2.Distance(lastTouchPosition, Input.GetTouch(0).position) / screenScale > TAP_MOVE_DEADZONE;
+                cameraFollowingLastTouch = cameraFollowingCurrentTouch;
             }
         }
 
         // Follow touch or snap to orientation.
-        if(cameraFollowingTouch)
+        if (cameraFollowingCurrentTouch)
         {
             float rotationAmount = (Input.GetTouch(0).position.x - lastTouchPosition.x) / screenScale * ROTATION_MOVE_SPEED; // TODO: Make dependent on the orientation
             continousToPlayer = (Quaternion.AngleAxis(rotationAmount, TrackedPlayer.up) * continousToPlayer).normalized;

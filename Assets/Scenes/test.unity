@@ -792,6 +792,69 @@ Prefab:
   m_RootGameObject: {fileID: 1008441370}
   m_IsPrefabParent: 0
   m_IsExploded: 1
+--- !u!1 &354393379
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 354393381}
+  - 108: {fileID: 354393380}
+  m_Layer: 0
+  m_Name: Directional light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!108 &354393380
+Light:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 354393379}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Type: 1
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: .5
+  m_Range: 10
+  m_SpotAngle: 30
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 0
+    m_Resolution: -1
+    m_Strength: 1
+    m_Bias: .0500000007
+    m_Softness: 4
+    m_SoftnessFade: 1
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_ActuallyLightmapped: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_Lightmapping: 1
+  m_ShadowSamples: 1
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
+  m_IndirectIntensity: 1
+  m_AreaSize: {x: 1, y: 1}
+--- !u!4 &354393381
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 354393379}
+  m_LocalRotation: {x: .408217937, y: -.234569728, z: .109381661, w: .875426114}
+  m_LocalPosition: {x: 1.17999995, y: 7.36000013, z: 4.30999994}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
 --- !u!1 &369040013
 GameObject:
   m_ObjectHideFlags: 0
@@ -2962,7 +3025,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0476d7eef914e4d4097be17be406fa12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TheCameraIAmResponsibleFor: {fileID: 0}
+  MainCamera: {fileID: 1733401209}
 --- !u!23 &1072857636
 Renderer:
   m_ObjectHideFlags: 0
@@ -4569,6 +4632,7 @@ GameObject:
   - 92: {fileID: 1733401206}
   - 124: {fileID: 1733401205}
   - 81: {fileID: 1733401204}
+  - 114: {fileID: 1733401209}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -4636,11 +4700,25 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1733401203}
   m_LocalRotation: {x: .199715793, y: 0, z: 0, w: .979853868}
-  m_LocalPosition: {x: -1.95000005, y: 1.94000006, z: -10.0600004}
+  m_LocalPosition: {x: -1.95000005, y: 3.49000001, z: 4.30999994}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!114 &1733401209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1733401203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9128bba6c6801fd47814596e39c3b3dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TrackedPlayer: {fileID: 1072857639}
+  LOOK_HEIGHT: 2.22000003
+  LOOK_DISTANCE: 3.79999995
 --- !u!1001 &1746103672
 Prefab:
   m_ObjectHideFlags: 0
