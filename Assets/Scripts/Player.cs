@@ -14,12 +14,12 @@ class Player : MonoBehaviour
 
     void Start()
     {
-        State.Start();
+        State.Start(transform);
     }
 
     void Update()
     {
-        transform.position = new Vector3(0.0f, Mathf.Sin(Time.realtimeSinceStartup), 0.0f);
+           //transform.position = new Vector3(0.0f, Mathf.Sin(Time.realtimeSinceStartup), 0.0f);
         State.Update();
     }
 }

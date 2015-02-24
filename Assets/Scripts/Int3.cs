@@ -48,11 +48,15 @@ struct Int3
         this.z = vec.z;
     }
 
+    /// <summary>
+    /// Cast. Snapping to nearest integer value.
+    /// </summary>
+    /// <param name="vec"></param>
     public Int3(Vector3 vec)
     {
-        this.x = (int)vec.x;
-        this.y = (int)vec.y;
-        this.z = (int)vec.z;
+        this.x = (int)Math.Floor(vec.x + 0.5f);
+        this.y = (int)Math.Floor(vec.y + 0.5f);
+        this.z = (int)Math.Floor(vec.z + 0.5f);
     }
 
     public override int GetHashCode()
@@ -127,7 +131,7 @@ struct Int3
 
     public static Int3 operator %(Int3 vec, Int3 vec2)
     {
-        return new Int3(vec.x % vec2.x, vec.y % vec2.y, vec.z % vec2.z);
+        return new Int3((vec.x + vec2.x) % vec2.x, (vec.y + vec2.y) % vec2.y, (vec.z + vec2.z) % vec2.z);
     }
 
     public Vector3 Lerp(Int3 vec, float t)
@@ -162,7 +166,7 @@ struct Int3
 
     public override String ToString()
     {
-        return "[X= " + this.x + "; Y= " + this.y + "]";
+        return "[X= " + this.x + "; Y= " + this.y + "; Z= " + this.z + "]";
     }
 
     public bool Equals(Int3 other)
