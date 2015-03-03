@@ -78,7 +78,7 @@ class Player : MonoBehaviour
         // Switch player?
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended && !MainCamera.CameraFollowingLastTouch)
         {
-            Ray ray = MainCamera.camera.ScreenPointToRay(Input.GetTouch(0).position);
+            Ray ray = MainCamera.GetComponent<Camera>().ScreenPointToRay(Input.GetTouch(0).position);
             if (Physics.Raycast(ray, Mathf.Infinity, Player.PLAYER_LAYER))
             {
                 if (state.GetType() == typeof(Magician))

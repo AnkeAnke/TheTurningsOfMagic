@@ -1,7 +1,20 @@
 fileFormatVersion: 2
 guid: 38dfde496b443bd429dea574d801cd79
-MonoAssemblyImporter:
+timeCreated: 1425411173
+licenseType: Free
+PluginImporter:
   serializedVersion: 1
   iconMap: {}
   executionOrder: {}
+  isPreloaded: 0
+  platformData:
+    Any:
+      enabled: 0
+      settings: {}
+    Editor:
+      enabled: 1
+      settings:
+        DefaultValueInitialized: true
   userData: 
+  assetBundleName: 
+  assetBundleVariant: 
