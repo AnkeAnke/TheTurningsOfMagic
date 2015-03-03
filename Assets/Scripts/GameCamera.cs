@@ -6,7 +6,7 @@ using UnityEngine;
 
 class GameCamera : MonoBehaviour
 {
-    public Transform TrackedPlayer;
+    public Player TrackedPlayer;
     public float LOOK_HEIGHT = 2.0f;
     public float LOOK_DISTANCE = 2.0f;
 
@@ -76,7 +76,7 @@ class GameCamera : MonoBehaviour
         if (cameraFollowingCurrentTouch)
         {
             float rotationAmount = (Input.GetTouch(0).position.x - lastTouchPosition.x) / screenScale * ROTATION_MOVE_SPEED; // TODO: Make dependent on the orientation
-            continousToPlayer = (Quaternion.AngleAxis(rotationAmount, TrackedPlayer.up) * continousToPlayer).normalized;
+            continousToPlayer = (Quaternion.AngleAxis(rotationAmount, TrackedPlayer.transform.up) * continousToPlayer).normalized;
             DiscreteToPlayer = Direction.GetDirection(continousToPlayer);
             lastTouchPosition = Input.GetTouch(0).position;
         }
@@ -85,8 +85,21 @@ class GameCamera : MonoBehaviour
             continousToPlayer = Vector3.Slerp(DiscreteToPlayer.Vector, continousToPlayer, (float)Math.Exp(-Time.deltaTime * ROTATION_SNAP_SPEED));
         }
 
-        transform.position = TrackedPlayer.position + TrackedPlayer.up * LOOK_HEIGHT - continousToPlayer * LOOK_DISTANCE;
-        transform.LookAt(TrackedPlayer);
+
+        Vector3 up = TrackedPlayer.transform.up;
+
+        // Rotate in snail mode.
+        if (TrackedPlayer.IsSnail)
+        {
+            // TODO: Smoothing
+            up = new Vector3(-Input.acceleration.x, -Input.acceleration.y, 0.0f);
+            up.Normalize();
+            up = Quaternion.LookRotation(continousToPlayer, TrackedPlayer.transform.up) * up;
+        }
+
+        transform.position = TrackedPlayer.transform.position + up * LOOK_HEIGHT - continousToPlayer * LOOK_DISTANCE;
+        transform.LookAt(TrackedPlayer.transform, TrackedPlayer.transform.up);
+        //transform.Rotate(transform.forward, Vector3.Angle(up, TrackedPlayer.transform.up) * Mathf.Sign(-Input.acceleration.x), Space.World);
     }
 
     private void End()

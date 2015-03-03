@@ -14,6 +14,8 @@ class Player : MonoBehaviour
     private GameObject statePrefabInstance;
     private PlayerState state;
 
+    public bool IsSnail { get { return state.GetType() == typeof(Snail); } }
+
     const int PLAYER_LAYER = 1 << 8;
     
     void Start()
