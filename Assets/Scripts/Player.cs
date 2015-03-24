@@ -4,7 +4,7 @@ using UnityEditor;
 
 class Player : MonoBehaviour
 {
-    public GameCamera MainCamera;
+    public GameCamera MainCamera = null;
 
     /// <summary>
     /// Prefab templates.
@@ -17,7 +17,28 @@ class Player : MonoBehaviour
     public bool IsSnail { get { return state.GetType() == typeof(Snail); } }
 
     const int PLAYER_LAYER = 1 << 8;
-    
+
+    public enum LookDirection
+    {
+        RIGHT,
+        LEFT
+    };
+    public LookDirection CurrentLookDirection
+    {
+        get { return currentLookDirection; }
+        set { currentLookDirection = value; }
+    }
+    private LookDirection currentLookDirection = LookDirection.RIGHT;
+
+    public Int3 GridPosition
+    {
+        get { return new Int3(transform.position); }
+        set
+        {
+            transform.position = (Vector3)value;
+        }
+    }
+
     void Start()
     {
         // Load prefab templates.
@@ -50,9 +71,7 @@ class Player : MonoBehaviour
         }
         else
         {
-            state.Init(transform, MainCamera);
-            state.transform.parent = transform;
-            state.transform.localPosition = Vector3.zero;
+            state.Init(this, MainCamera);
         }
     }
 
@@ -69,9 +88,7 @@ class Player : MonoBehaviour
         }
         else
         {
-            state.Init(transform, MainCamera);
-            state.transform.parent = transform;
-            state.transform.localPosition = Vector3.zero;
+            state.Init(this, MainCamera);
         }
     }
 
@@ -88,6 +105,20 @@ class Player : MonoBehaviour
                 else
                     SwitchToMagician();
             }
+        }
+
+        // Change orientation to match right/left setting
+        if (Input.touchCount == 0)
+        {
+            Int3 sideVec = new Int3(Vector3.Cross(MainCamera.DiscreteToPlayer.Vector, transform.up)) * (CurrentLookDirection == LookDirection.RIGHT ? -1 : 1);
+            if (new Int3(transform.forward) == -sideVec && MainCamera.CameraFollowingLastTouch)
+            {
+                CurrentLookDirection = CurrentLookDirection == LookDirection.RIGHT ? LookDirection.LEFT : LookDirection.RIGHT;
+                sideVec = -sideVec;
+            }
+
+            //transform.forward = (Vector3)sideVec; 
+            transform.rotation = Quaternion.LookRotation((Vector3)sideVec, transform.up);
         }
     }
 }

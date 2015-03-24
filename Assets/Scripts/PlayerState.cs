@@ -8,23 +8,23 @@ using UnityEngine;
 abstract class PlayerState : MonoBehaviour
 {
     /// <summary>
-    /// The position the player is coming from.
+    /// Reference to the player this player state belongs to.
     /// </summary>
-    protected Int3 Position;
-    /// <summary>
-    /// Reference to the holding players transformation.
-    /// </summary>
-    protected Transform PlayerTransform;
+    protected Player player;
+
     /// <summary>
     /// Main camera script.
     /// </summary>
-    protected GameCamera MainCamera;
+    protected GameCamera mainCamera;
 
-    public virtual void Init(Transform playerTransform, GameCamera mainCamera)
+    public virtual void Init(Player player, GameCamera mainCamera)
     {
-        Position = new Int3(playerTransform.position);
-        this.PlayerTransform = playerTransform;
-        this.MainCamera = mainCamera;
+        this.player = player;
+        this.mainCamera = mainCamera;
+
+        transform.parent = player.transform;
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.identity;
     }
 
     public abstract void Update();

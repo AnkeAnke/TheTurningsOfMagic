@@ -7,26 +7,25 @@ using UnityEngine;
 class Magician : PlayerState
 {
     //protected Int3 up;
-    protected bool moveable = true;
-    protected Vector3 startPosition, startRight, startUp;
+    private bool moveable = true;
+    private Int3 startPosition;
+    private Vector3 startRight, startUp;
 
-    public override void Init(Transform playerTransform, GameCamera mainCamera)
+    public override void Init(Player player, GameCamera mainCamera)
     {
-        base.Init(playerTransform, mainCamera);
+        base.Init(player, mainCamera);
 
         // Save initial player position.
-        startPosition = (Vector3)Position;
-        startRight = playerTransform.right;
-        startUp = playerTransform.up;
+        startPosition = player.GridPosition;
+        startRight = player.transform.right;
+        startUp = player.transform.up;
     }
 
     public void Respawn()
     {
-        PlayerTransform.position = startPosition;
-        PlayerTransform.right = startRight;
-        PlayerTransform.up = startUp;
-        Position = new Int3(startPosition);
-        Debug.Log(Position);
+        player.GridPosition = startPosition;
+        player.transform.right = startRight;
+        player.transform.up = startUp;
     }
 
     public override void Update()
@@ -35,12 +34,12 @@ class Magician : PlayerState
             return;
 
         // Falling.
-        if(!World.Get().IsSolid(Position - Int3.UnitY))
+        if(!World.Get().IsSolid(player.GridPosition - Int3.UnitY))
         {
             //moveable = false;
-            Position -= Int3.UnitY;
+            player.GridPosition -= Int3.UnitY;
 
-            if (Position.y < World.Get().Size.y * 2)
+            if (player.GridPosition.y < World.Get().Size.y * 2)
             {
                 Respawn();
             }
@@ -48,7 +47,7 @@ class Magician : PlayerState
 
         // Fallback moving via keyboard.
         Int3 nextPos;
-        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow))
+      /*  if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
             if (Input.GetKeyDown(KeyCode.RightArrow))
             {
@@ -65,29 +64,29 @@ class Magician : PlayerState
                 // TODO: move
                 Position = nextPos;
             }
-        }
+        }*/
         
         // Move (touch)
-        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended && !MainCamera.CameraFollowingLastTouch)
+        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended && !mainCamera.CameraFollowingLastTouch)
         {
             // Ray cast for transform to 
             if (Input.GetTouch(0).position.x > Screen.width / 2)
             {
-                nextPos = Position + new Int3(Vector3.Cross(PlayerTransform.up, MainCamera.DiscreteToPlayer.Vector));
+                nextPos = player.GridPosition + new Int3(Vector3.Cross(player.transform.up, mainCamera.DiscreteToPlayer.Vector));
+                player.CurrentLookDirection = Player.LookDirection.RIGHT;
             }
             else
             {
-                nextPos = Position - new Int3(Vector3.Cross(PlayerTransform.up, MainCamera.DiscreteToPlayer.Vector));
+                nextPos = player.GridPosition - new Int3(Vector3.Cross(player.transform.up, mainCamera.DiscreteToPlayer.Vector));
+                player.CurrentLookDirection = Player.LookDirection.LEFT;
             }
 
             if (!World.Get().IsSolid(nextPos))
             {
                 // TODO: move
-                Position = nextPos;
+                player.GridPosition = nextPos;
             }
         }
-
-        PlayerTransform.position = (Vector3)Position;
     }
 
     public bool IsMoveable()

@@ -6,7 +6,7 @@ using UnityEngine;
 
 class GameCamera : MonoBehaviour
 {
-    public Player TrackedPlayer;
+    public Player TrackedPlayer = null;
     public float LOOK_HEIGHT = 2.0f;
     public float LOOK_DISTANCE = 2.0f;
 
@@ -14,8 +14,16 @@ class GameCamera : MonoBehaviour
     private const float ROTATION_SNAP_SPEED = 10.0f;
     private const float ROTATION_MOVE_SPEED = 70.0f;
 
-    public Direction DiscreteToPlayer { get; private set;}
+    public Direction DiscreteToPlayer { get; private set; }
     private Vector3 continousToPlayer;
+
+    public Vector3 DeviceUpInWorld { get; private set; }
+    public Vector3 DeviceUp { get; private set; }
+
+    /// <summary>
+    /// The camera does actually never change its general up direction. It is fixed at startup using the player's orientation
+    /// </summary>
+    private Vector3 generalWorldUp;
 
     /// <summary>
     /// Last touch position in pixel coordinates. Only non-negative if there is an ongoing touch.
@@ -48,6 +56,8 @@ class GameCamera : MonoBehaviour
 
         DiscreteToPlayer = Direction.GetDirection(TrackedPlayer.transform.right);
         continousToPlayer = DiscreteToPlayer.Vector;
+
+        generalWorldUp = TrackedPlayer.transform.up;
     }
 
     private void Update()
@@ -75,6 +85,9 @@ class GameCamera : MonoBehaviour
         // Follow touch or snap to orientation.
         if (cameraFollowingCurrentTouch)
         {
+            //float x = Vector3.Dot(TrackedPlayer.transform.up, generalWorldUp);
+            //float y = Vector3.Dot(TrackedPlayer.transform.up, Vector3.Cross(continousToPlayer, generalWorldUp));
+
             float rotationAmount = (Input.GetTouch(0).position.x - lastTouchPosition.x) / screenScale * ROTATION_MOVE_SPEED; // TODO: Make dependent on the orientation
             continousToPlayer = (Quaternion.AngleAxis(rotationAmount, TrackedPlayer.transform.up) * continousToPlayer).normalized;
             DiscreteToPlayer = Direction.GetDirection(continousToPlayer);
@@ -86,19 +99,21 @@ class GameCamera : MonoBehaviour
         }
 
 
-        Vector3 up = TrackedPlayer.transform.up;
+        Vector3 upPositionOffsetDir = TrackedPlayer.transform.up;
 
         // Rotate in snail mode.
-        if (TrackedPlayer.IsSnail)
+     /*   if (TrackedPlayer.IsSnail)
         {
             // TODO: Smoothing
-            up = new Vector3(-Input.acceleration.x, -Input.acceleration.y, 0.0f);
-            up.Normalize();
-            up = Quaternion.LookRotation(continousToPlayer, TrackedPlayer.transform.up) * up;
-        }
+            DeviceUp = new Vector3(-Input.acceleration.x, -Input.acceleration.y, 0.0f);
+            DeviceUp.Normalize();
+            DeviceUpInWorld = Quaternion.LookRotation(continousToPlayer, TrackedPlayer.transform.up) * DeviceUp;
 
-        transform.position = TrackedPlayer.transform.position + up * LOOK_HEIGHT - continousToPlayer * LOOK_DISTANCE;
-        transform.LookAt(TrackedPlayer.transform, TrackedPlayer.transform.up);
+            upPositionOffsetDir = DeviceUpInWorld;
+        } */
+
+        transform.position = TrackedPlayer.transform.position + upPositionOffsetDir * LOOK_HEIGHT - continousToPlayer * LOOK_DISTANCE;
+        transform.LookAt(TrackedPlayer.transform, generalWorldUp);
         //transform.Rotate(transform.forward, Vector3.Angle(up, TrackedPlayer.transform.up) * Mathf.Sign(-Input.acceleration.x), Space.World);
     }
 

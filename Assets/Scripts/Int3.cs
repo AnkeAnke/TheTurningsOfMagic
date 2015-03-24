@@ -79,6 +79,11 @@ struct Int3
         return new Int3(vec1.x - vec2.x, vec1.y - vec2.y, vec1.z - vec2.z);
     }
 
+    public static Int3 operator -(Int3 vec)
+    {
+        return new Int3(- vec.x, - vec.y, - vec.z);
+    }
+
     public static Int3 operator *(Int3 vec1, Int3 vec2)
     {
         return new Int3(vec1.x * vec2.x, vec1.y * vec2.y, vec1.z * vec2.z);
